@@ -4,9 +4,11 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import io.gw.recordshop.R
 
 val LocalTypography = staticCompositionLocalOf { AppTypography() }
 val LocalColor = staticCompositionLocalOf { AppColor() }
@@ -21,29 +23,62 @@ class AppColor(
     val colorBeige: Color = Color(0xFFEFE6D9)
 )
 
+val manropeFontFamily = FontFamily(
+    Font(R.font.manrope_regular, FontWeight.Normal),
+    Font(R.font.manrope_medium, FontWeight.Medium),
+    Font(R.font.manrope_semibold, FontWeight.SemiBold),
+    Font(R.font.manrope_bold, FontWeight.Bold),
+)
+
 @Immutable
 class AppTypography(
-    val bodyLarge: TextStyle = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+    val displayLarge: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp,
+        lineHeight = 40.sp,
+        letterSpacing = (-0.5).sp
+    ),
+    val titleLarge: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+    val titleMedium: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.15.sp
+    ),
+    val bodyLarge: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    val bodyMedium: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.25.sp
+    ),
+    val labelLarge: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp
+    ),
+    val labelSmall: TextStyle = TextStyle(
+        fontFamily = manropeFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-    */
 )
