@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Android Quick Template"
+rootProject.name = "Record Shop"
 include(":app")
  

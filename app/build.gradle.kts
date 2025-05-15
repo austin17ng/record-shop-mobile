@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "io.gw.androidquicktemplate"
+    namespace = "io.gw.recordshop"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "io.gw.androidquicktemplate"
+        applicationId = "io.gw.recordshop"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
