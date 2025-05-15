@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 fun AppTheme(content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalTypography provides AppTypography(),
+        LocalColor provides AppColor()
     ) {
         content()
     }
