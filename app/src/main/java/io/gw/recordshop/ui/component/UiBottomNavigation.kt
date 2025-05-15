@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,36 +27,39 @@ fun UiBottomNavigation(
     selectedItem: UiBottomNavigationItem = UiBottomNavigationItem.HOME,
     onClick: (UiBottomNavigationItem) -> Unit = {}
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .background(color = LocalColor.current.colorSoftScream)
-    ) {
-        UiBottomNavigationItem.values().forEach {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        onClick(it)
-                    }
-                    .padding(vertical = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = if (it == selectedItem) painterResource(id = it.iconSelected) else painterResource(
-                        id = it.iconUnselected
-                    ),
-                    contentDescription = it.label,
-                    tint = LocalColor.current.colorBlack
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = it.label,
-                    color = LocalColor.current.colorBlack,
-                    style = if (it == selectedItem) LocalTypography.current.labelLarge.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ) else LocalTypography.current.labelLarge
-                )
+    Column(Modifier.fillMaxWidth()) {
+        HorizontalDivider(color = LocalColor.current.colorLightGray)
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .background(color = LocalColor.current.colorSoftScream)
+        ) {
+            UiBottomNavigationItem.values().forEach {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable {
+                            onClick(it)
+                        }
+                        .padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = if (it == selectedItem) painterResource(id = it.iconSelected) else painterResource(
+                            id = it.iconUnselected
+                        ),
+                        contentDescription = it.label,
+                        tint = LocalColor.current.colorBlack
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = it.label,
+                        color = LocalColor.current.colorBlack,
+                        style = if (it == selectedItem) LocalTypography.current.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ) else LocalTypography.current.labelLarge
+                    )
+                }
             }
         }
     }

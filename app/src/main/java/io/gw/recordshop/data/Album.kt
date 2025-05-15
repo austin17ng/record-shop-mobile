@@ -3,6 +3,7 @@ package io.gw.recordshop.data
 data class Album(
     val id: Long? = null,
     val title: String? = null,
+    val description: String? = null,
     val artist: Artist? = null,
     val coverUrl: String? = null,
     val releaseDate: String? = null,
