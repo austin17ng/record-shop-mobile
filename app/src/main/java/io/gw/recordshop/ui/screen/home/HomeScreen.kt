@@ -98,7 +98,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(it.albums) {
-                        Column(Modifier.width(160.dp)) {
+                        Column(Modifier.width(120.dp)) {
                             Box(contentAlignment = Alignment.BottomEnd) {
                                 AsyncImage(
                                     model = it.coverUrl,
@@ -107,7 +107,7 @@ fun HomeScreen(
                                     placeholder = painterResource(id = R.drawable.never_mind_cover),
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .width(160.dp)
+                                        .width(120.dp)
                                         .height(120.dp)
                                         .clip(RoundedCornerShape(8.dp))
                                 )

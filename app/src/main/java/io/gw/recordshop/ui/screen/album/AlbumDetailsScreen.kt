@@ -51,9 +51,9 @@ fun AlbumDetailsScreen(
                 placeholder = painterResource(id = R.drawable.never_mind_cover),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 96.dp)
                     .fillMaxWidth()
-                    .aspectRatio(1.5f)
+                    .aspectRatio(1f)
                     .clip(RoundedCornerShape(16.dp))
             )
             Spacer(Modifier.height(24.dp))

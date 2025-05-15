@@ -77,7 +77,7 @@ enum class UiBottomNavigationItem(
     val label: String
 ) {
     HOME(R.drawable.ic_home_filled, R.drawable.ic_home, "Home"),
-    SEARCH(R.drawable.ic_fav_filled, R.drawable.ic_fav, "Favourite"),
+    FAV(R.drawable.ic_fav_filled, R.drawable.ic_fav, "Favourite"),
     CART(R.drawable.ic_cart_filled, R.drawable.ic_cart, "Cart"),
     PROFILE(R.drawable.ic_profile_filled, R.drawable.ic_profile, "Profile")
 }

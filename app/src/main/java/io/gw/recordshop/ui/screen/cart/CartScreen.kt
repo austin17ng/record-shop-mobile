@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +35,10 @@ import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.CartItem
 import io.gw.recordshop.ui.component.UiAppBar
+import io.gw.recordshop.ui.component.UiBottomNavigation
+import io.gw.recordshop.ui.component.UiBottomNavigationItem
 import io.gw.recordshop.ui.component.UiButton
+import io.gw.recordshop.ui.screen.home.HomeScreen
 import io.gw.recordshop.ui.theme.LocalColor
 import io.gw.recordshop.ui.theme.LocalTypography
 
@@ -45,88 +51,91 @@ fun CartScreen(
         Modifier
             .fillMaxSize()
             .background(color = LocalColor.current.colorSoftScream)
+            .verticalScroll(rememberScrollState())
     ) {
-        Column(Modifier.weight(1f)) {
-            UiAppBar(
-                title = "Cart"
-            )
-            Spacer(Modifier.height(24.dp))
-            state.cartItems.forEach { cartItem ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                ) {
-                    AsyncImage(
-                        model = cartItem.album.coverUrl,
-                        contentDescription = null,
-                        error = painterResource(id = R.drawable.never_mind_cover),
-                        placeholder = painterResource(id = R.drawable.never_mind_cover),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text(
-                            text = cartItem.album.title ?: "",
-                            maxLines = 2,
-                            style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = MoneyUtils.formatMoney(cartItem.album.price ?: 0.0),
-                            style = LocalTypography.current.bodyMedium
-                        )
-                    }
-                    Spacer(Modifier.width(16.dp))
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .background(
-                                color = LocalColor.current.colorLightGray,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "-",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            textAlign = TextAlign.Center,
-                            style = LocalTypography.current.bodyMedium,
-                        )
-                        Text(
-                            text = "${cartItem.quantity}",
-                            style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                        )
-                        Text(
-                            text = "+",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            textAlign = TextAlign.Center,
-                            style = LocalTypography.current.bodyMedium,
-                        )
-                    }
-
-                }
-            }
-        }
-        Column(Modifier.fillMaxWidth()) {
-            HorizontalDivider(color = LocalColor.current.colorLightGray)
+        UiAppBar(
+            title = "Cart"
+        )
+        Spacer(Modifier.height(24.dp))
+        state.cartItems.forEach { cartItem ->
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                Text(
-                    text = MoneyUtils.formatMoney(state.getTotalPrice()),
-                    style = LocalTypography.current.headlineLarge
+                AsyncImage(
+                    model = cartItem.album.coverUrl,
+                    contentDescription = null,
+                    error = painterResource(id = R.drawable.never_mind_cover),
+                    placeholder = painterResource(id = R.drawable.never_mind_cover),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp))
                 )
-                Spacer(Modifier.weight(1f))
-                UiButton(text = "Add to cart", onClick = {})
+                Spacer(Modifier.width(16.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        text = cartItem.album.title ?: "",
+                        maxLines = 2,
+                        style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = MoneyUtils.formatMoney(cartItem.album.price ?: 0.0),
+                        style = LocalTypography.current.bodyMedium
+                    )
+                }
+                Spacer(Modifier.width(16.dp))
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .background(
+                            color = LocalColor.current.colorLightGray,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "-",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        textAlign = TextAlign.Center,
+                        style = LocalTypography.current.bodyMedium,
+                    )
+                    Text(
+                        text = "${cartItem.quantity}",
+                        style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    )
+                    Text(
+                        text = "+",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        textAlign = TextAlign.Center,
+                        style = LocalTypography.current.bodyMedium,
+                    )
+                }
+
             }
         }
+        Spacer(Modifier.height(24.dp))
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = LocalColor.current.colorLightGray
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "Total: " + MoneyUtils.formatMoney(state.getTotalPrice()),
+            style = LocalTypography.current.headlineSmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        UiButton(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            text = "Check out",
+            onClick = {})
     }
 }
 
@@ -176,5 +185,9 @@ fun CartScreenPreview() {
             )
         )
     )
-    CartScreen(state = state) { }
+    Scaffold(bottomBar = {
+        UiBottomNavigation(selectedItem = UiBottomNavigationItem.CART)
+    }) { padding ->
+        CartScreen(state = state) { }
+    }
 }
