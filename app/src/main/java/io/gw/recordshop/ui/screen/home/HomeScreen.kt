@@ -1,59 +1,197 @@
 package io.gw.recordshop.ui.screen.home
 
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import io.gw.recordshop.ui.common.LoadingHandler
-import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import io.gw.recordshop.MoneyUtils
+import io.gw.recordshop.R
+import io.gw.recordshop.data.Album
+import io.gw.recordshop.data.Artist
+import io.gw.recordshop.ui.component.UiBottomNavigation
+import io.gw.recordshop.ui.component.UiBottomNavigationItem
+import io.gw.recordshop.ui.theme.LocalColor
+import io.gw.recordshop.ui.theme.LocalTypography
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeViewModel = koinViewModel<HomeViewModel>()
+    state: HomeState,
+    onEvent: (HomeEvent) -> Unit,
 ) {
-    val products by viewModel.products.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-    LoadingHandler(isLoading)
-
-    Column(
+    LazyColumn(
         Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
+            .background(color = LocalColor.current.colorSoftScream)
     ) {
-        Spacer(Modifier.height(32.dp))
-        Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            content = {
-                Text(text = "Get Products")
-            },
-            onClick = { viewModel.getProducts() }
-        )
-        Spacer(Modifier.height(16.dp))
-        LazyColumn {
-            items(products) {
-                Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(text = "${it.id} - ${it.name}")
-
+        item(key = "title") {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+                    .background(color = LocalColor.current.colorOrange)
+                    .padding(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Record shop",
+                        style = LocalTypography.current.displayLarge,
+                        color = LocalColor.current.colorOffWhite
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Icon(
+                        painter = painterResource(R.drawable.ic_menu),
+                        tint = LocalColor.current.colorOffWhite,
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
             }
         }
+        items(state.homeSections) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, bottom = 16.dp),
+                    text = it.title,
+                    style = LocalTypography.current.headlineMedium,
+                    color = LocalColor.current.colorBlack,
+                )
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(it.albums) {
+                        Column(Modifier.width(160.dp)) {
+                            Box(contentAlignment = Alignment.BottomEnd) {
+                                AsyncImage(
+                                    model = it.coverUrl,
+                                    contentDescription = null,
+                                    error = painterResource(id = R.drawable.never_mind_cover),
+                                    placeholder = painterResource(id = R.drawable.never_mind_cover),
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .width(160.dp)
+                                        .height(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                )
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = it.title ?: "",
+                                style = LocalTypography.current.headlineSmall,
+                                color = LocalColor.current.colorBlack,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = it.artist?.name ?: "",
+                                style = LocalTypography.current.bodyMedium,
+                                color = LocalColor.current.colorBlack,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                text = MoneyUtils.formatMoney(it.price ?: 0.0),
+                                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
+                                color = LocalColor.current.colorOrange,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    val state = HomeState(
+        homeSections = listOf(
+            HomeSection(
+                title = "New arrivals",
+                albums = listOf(
+                    Album(id = 0L, title = "The Tortured Poets Department", artist = Artist(name = "Taylor Swift"), price = 14.99),
+                    Album(id = 1L, title = "Endless Summer Vacation", artist = Artist(name = "Miley Cyrus"), price = 13.49),
+                    Album(id = 2L, title = "Utopia", artist = Artist(name = "Travis Scott"), price = 15.99),
+                    Album(id = 3L, title = "Hackney Diamonds", artist = Artist(name = "The Rolling Stones"), price = 16.99),
+                )
+            ),
+            HomeSection(
+                title = "Trending",
+                albums = listOf(
+                    Album(id = 4L, title = "One Thing at a Time", artist = Artist(name = "Morgan Wallen"), price = 12.99),
+                    Album(id = 5L, title = "1989 (Taylor's Version)", artist = Artist(name = "Taylor Swift"), price = 14.49),
+                    Album(id = 6L, title = "Guts", artist = Artist(name = "Olivia Rodrigo"), price = 13.99),
+                    Album(id = 7L, title = "For All the Dogs", artist = Artist(name = "Drake"), price = 15.49),
+                )
+            ),
+            HomeSection(
+                title = "Staff picks",
+                albums = listOf(
+                    Album(id = 8L, title = "Blue Rev", artist = Artist(name = "Alvvays"), price = 11.99),
+                    Album(id = 9L, title = "Being Funny in a Foreign Language", artist = Artist(name = "The 1975"), price = 13.99),
+                    Album(id = 10L, title = "The Record", artist = Artist(name = "boygenius"), price = 14.99),
+                    Album(id = 11L, title = "SOUR", artist = Artist(name = "Olivia Rodrigo"), price = 12.49),
+                )
+            ),
+            HomeSection(
+                title = "Sale",
+                albums = listOf(
+                    Album(id = 12L, title = "Rumours", artist = Artist(name = "Fleetwood Mac"), price = 8.99),
+                    Album(id = 13L, title = "Abbey Road", artist = Artist(name = "The Beatles"), price = 9.49),
+                    Album(id = 14L, title = "Nevermind", artist = Artist(name = "Nirvana"), price = 7.99),
+                    Album(id = 15L, title = "Back in Black", artist = Artist(name = "AC/DC"), price = 6.99),
+                )
+            ),
+        )
+    )
+
+    Scaffold(bottomBar = {
+        UiBottomNavigation(selectedItem = UiBottomNavigationItem.HOME)
+    }) { padding ->
+        HomeScreen(state) { }
     }
 }

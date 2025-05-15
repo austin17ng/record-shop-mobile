@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.gw.recordshop.ui.screen.home.HomeDestination
-import io.gw.recordshop.ui.screen.home.HomeScreen
 import io.gw.recordshop.ui.screen.login.LoginDestination
 import io.gw.recordshop.ui.screen.login.LoginScreen
 import io.gw.recordshop.ui.theme.AppTheme
@@ -61,7 +60,6 @@ fun AppGraph(navController: NavHostController) {
         }
 
         composable<HomeDestination> {
-            HomeScreen(navController = navController)
         }
     }
 }

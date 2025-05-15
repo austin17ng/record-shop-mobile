@@ -23,7 +23,7 @@ import io.gw.recordshop.ui.theme.LocalTypography
 
 @Composable
 fun UiBottomNavigation(
-    selectedItemId: UiBottomNavigationItem = UiBottomNavigationItem.HOME,
+    selectedItem: UiBottomNavigationItem = UiBottomNavigationItem.HOME,
     onClick: (UiBottomNavigationItem) -> Unit = {}
 ) {
     Row(
@@ -42,7 +42,7 @@ fun UiBottomNavigation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    painter = if (it == selectedItemId) painterResource(id = it.iconSelected) else painterResource(
+                    painter = if (it == selectedItem) painterResource(id = it.iconSelected) else painterResource(
                         id = it.iconUnselected
                     ),
                     contentDescription = it.label,
@@ -52,7 +52,7 @@ fun UiBottomNavigation(
                 Text(
                     text = it.label,
                     color = LocalColor.current.colorBlack,
-                    style = if (it == selectedItemId) LocalTypography.current.labelLarge.copy(
+                    style = if (it == selectedItem) LocalTypography.current.labelLarge.copy(
                         fontWeight = FontWeight.SemiBold
                     ) else LocalTypography.current.labelLarge
                 )
