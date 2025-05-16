@@ -1,5 +1,8 @@
 package io.gw.recordshop.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Album(
     val id: Long? = null,
     val title: String? = null,

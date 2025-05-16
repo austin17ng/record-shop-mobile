@@ -33,6 +33,17 @@ import io.gw.recordshop.ui.theme.LocalTypography
 
 @Composable
 fun AlbumDetailsScreen(
+    album: Album
+) {
+    AlbumDetailsScreen(
+        state = AlbumDetailsState(album = album),
+        onEvent = {}
+    )
+
+}
+
+@Composable
+fun AlbumDetailsScreen(
     state: AlbumDetailsState,
     onEvent: (AlbumDetailsEvent) -> Unit,
 ) {

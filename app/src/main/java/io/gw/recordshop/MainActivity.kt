@@ -11,6 +11,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import io.gw.recordshop.ui.screen.album.AlbumDetailsDestination
+import io.gw.recordshop.ui.screen.album.AlbumDetailsScreen
 import io.gw.recordshop.ui.screen.home.HomeDestination
 import io.gw.recordshop.ui.screen.home.HomeScreen
 import io.gw.recordshop.ui.screen.login.LoginDestination
@@ -57,7 +60,15 @@ fun AppGraph(navController: NavHostController) {
         startDestination = HomeDestination
     ) {
         composable<HomeDestination> {
-            HomeScreen()
+            HomeScreen(
+                onAlbumClicked = {
+                    navController.navigate(AlbumDetailsDestination(it))
+                }
+            )
+        }
+        composable<AlbumDetailsDestination> {
+            val album = it.toRoute<AlbumDetailsDestination>().album
+            AlbumDetailsScreen(album = album)
         }
     }
 }

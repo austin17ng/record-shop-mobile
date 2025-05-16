@@ -21,7 +21,7 @@ data class HomeSection(
 )
 
 sealed class HomeEvent {
-
+    data class OnAlbumClicked(val album: Album): HomeEvent()
 }
 
 class HomeViewModel(
