@@ -1,6 +1,8 @@
 package io.gw.recordshop.di
 
+import io.gw.recordshop.BuildConfig
 import io.gw.recordshop.remote.AppApiService
+import io.gw.recordshop.remote.RecordShopApiService
 import io.gw.recordshop.ui.screen.home.HomeViewModel
 import io.gw.recordshop.ui.screen.login.LoginViewModel
 import okhttp3.OkHttpClient
@@ -30,8 +32,18 @@ val appModule = module {
             .build()
             .create(AppApiService::class.java)
     }
+
+    single {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(get())
+            .build()
+            .create(RecordShopApiService::class.java)
+    }
 }
 
 val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
 }
