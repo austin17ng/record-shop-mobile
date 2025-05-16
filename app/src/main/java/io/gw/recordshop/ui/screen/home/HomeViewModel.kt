@@ -30,14 +30,13 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
-    init {
-        getAllArtist()
-
-    }
-
-    fun getAllArtist() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val artists = recordShopApiService.getAllArtists()
+    fun getAlbums() {
+        launchNetwork {
+            val newArrivalAlbums = recordShopApiService.getNewArrivalAlbums()
+            val newArrivalsSection = HomeSection(title = "New arrivals", albums = newArrivalAlbums)
+            _state.update {
+                it.copy(homeSections = listOf(newArrivalsSection))
+            }
         }
     }
 

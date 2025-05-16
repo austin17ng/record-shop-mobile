@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import io.gw.recordshop.MoneyUtils
 import io.gw.recordshop.R
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
+import io.gw.recordshop.ui.common.LoadingHandler
 import io.gw.recordshop.ui.component.UiBottomNavigation
 import io.gw.recordshop.ui.component.UiBottomNavigationItem
 import io.gw.recordshop.ui.theme.LocalColor
@@ -48,6 +50,13 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel<HomeViewModel>()
 ) {
     val state by viewModel.state.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LoadingHandler(isLoading)
+
+    LaunchedEffect(Unit) {
+        viewModel.getAlbums()
+    }
     HomeScreen(state) { }
 }
 

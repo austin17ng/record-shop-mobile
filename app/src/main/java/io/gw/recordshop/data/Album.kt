@@ -7,7 +7,7 @@ data class Album(
     val artist: Artist? = null,
     val coverUrl: String? = null,
     val releaseDate: String? = null,
-    val genre: List<String> = emptyList(),
+    val genre: String? = null,
     val tracks: List<Track> = emptyList(),
     val stockQuantity: Int? = null,
     val price: Double? = null,

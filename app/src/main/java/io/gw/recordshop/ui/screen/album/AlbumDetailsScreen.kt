@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -134,12 +133,12 @@ fun AlbumDetailsScreenPreview() {
             artist = Artist(name = "Pink Floyd"),
             coverUrl = "https://example.com/covers/dark_side_of_the_moon.jpg",
             releaseDate = "1973-03-01",
-            genre = listOf("Progressive Rock", "Psychedelic Rock"),
+            genre = "Rock",
             tracks = listOf(
-                Track(number = 1, title = "Speak to Me", durationInSeconds = 123),
-                Track(number = 2, title = "Breathe", durationInSeconds = 1231),
-                Track(number = 3, title = "Time", durationInSeconds = 1321),
-                Track(number = 4, title = "Money", durationInSeconds = 1321)
+                Track(trackNumber = 1, title = "Speak to Me", duration = 123),
+                Track(trackNumber = 2, title = "Breathe", duration = 1231),
+                Track(trackNumber = 3, title = "Time", duration = 1321),
+                Track(trackNumber = 4, title = "Money", duration = 1321)
             ),
             stockQuantity = 12,
             price = 11.99

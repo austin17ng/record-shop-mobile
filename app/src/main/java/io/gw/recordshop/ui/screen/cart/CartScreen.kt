@@ -150,7 +150,7 @@ fun CartScreenPreview() {
                     title = "Abbey Road",
                     description = "A classic album by The Beatles, featuring iconic tracks like 'Come Together' and 'Here Comes the Sun'.",
                     artist = Artist(name = "The Beatles"),
-                    genre = listOf("Rock"),
+                    genre = "Rock",
                     stockQuantity = 5,
                     price = 12.99
                 ),
@@ -164,7 +164,7 @@ fun CartScreenPreview() {
                     artist = Artist(name = "Daft Punk"),
                     coverUrl = "https://example.com/covers/random_access_memories.jpg",
                     releaseDate = "2013-05-17",
-                    genre = listOf("Electronic", "Disco", "Funk"),
+                    genre = "Funk",
                     stockQuantity = 10,
                     price = 14.49
                 ),
@@ -178,7 +178,7 @@ fun CartScreenPreview() {
                     artist = Artist(name = "Adele"),
                     coverUrl = "https://example.com/covers/21.jpg",
                     releaseDate = "2011-01-24",
-                    genre = listOf("Pop", "Soul"),
+                    genre = "Pop",
                     price = 10.99
                 ),
                 quantity = 1,
