@@ -13,6 +13,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,16 +30,29 @@ import io.gw.recordshop.R
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.Track
+import io.gw.recordshop.ui.common.LoadingHandler
 import io.gw.recordshop.ui.component.UiButton
 import io.gw.recordshop.ui.theme.LocalColor
 import io.gw.recordshop.ui.theme.LocalTypography
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AlbumDetailsScreen(
-    album: Album
+    albumId: Long,
+    viewModel: AlbumDetailsViewModel = koinViewModel<AlbumDetailsViewModel>(),
 ) {
+    val state by viewModel.state.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LoadingHandler(isLoading)
+
+    LaunchedEffect(Unit) {
+        viewModel.getAlbum(albumId)
+
+    }
+
     AlbumDetailsScreen(
-        state = AlbumDetailsState(album = album),
+        state = state,
         onEvent = {}
     )
 

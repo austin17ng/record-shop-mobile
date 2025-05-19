@@ -16,8 +16,6 @@ import io.gw.recordshop.ui.screen.album.AlbumDetailsDestination
 import io.gw.recordshop.ui.screen.album.AlbumDetailsScreen
 import io.gw.recordshop.ui.screen.home.HomeDestination
 import io.gw.recordshop.ui.screen.home.HomeScreen
-import io.gw.recordshop.ui.screen.login.LoginDestination
-import io.gw.recordshop.ui.screen.login.LoginScreen
 import io.gw.recordshop.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -62,13 +60,13 @@ fun AppGraph(navController: NavHostController) {
         composable<HomeDestination> {
             HomeScreen(
                 onAlbumClicked = {
-                    navController.navigate(AlbumDetailsDestination(it))
+                    it.id?.let { albumId -> navController.navigate(AlbumDetailsDestination(albumId)) }
                 }
             )
         }
         composable<AlbumDetailsDestination> {
-            val album = it.toRoute<AlbumDetailsDestination>().album
-            AlbumDetailsScreen(album = album)
+            val albumId = it.toRoute<AlbumDetailsDestination>().albumId
+            AlbumDetailsScreen(albumId = albumId)
         }
     }
 }

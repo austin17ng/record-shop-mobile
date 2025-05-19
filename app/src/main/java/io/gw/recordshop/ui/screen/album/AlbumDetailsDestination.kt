@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AlbumDetailsDestination(
-    val album: Album
+    val albumId: Long
 )
