@@ -5,6 +5,7 @@ import io.gw.recordshop.data.Album
 import io.gw.recordshop.remote.RecordShopApiService
 import io.gw.recordshop.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,12 +31,29 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
+    init {
+        getAlbums()
+    }
+
     fun getAlbums() {
         launchNetwork {
-            val newArrivalAlbums = recordShopApiService.getNewArrivalAlbums()
+            val newArrivalAlbumsDeferred = async { recordShopApiService.getNewArrivalAlbums() }
+            val trendingAlbumsDeferred = async { recordShopApiService.getTrendingAlbums() }
+            val staffPicksAlbumsDeferred = async { recordShopApiService.getStaffPicksAlbums() }
+            val saleAlbumsDeferred = async { recordShopApiService.getSaleAlbums() }
+
+            val newArrivalAlbums = newArrivalAlbumsDeferred.await()
+            val trendingAlbums = trendingAlbumsDeferred.await()
+            val staffPicksAlbums = staffPicksAlbumsDeferred.await()
+            val saleAlbums = saleAlbumsDeferred.await()
+
             val newArrivalsSection = HomeSection(title = "New arrivals", albums = newArrivalAlbums)
+            val trendingSection = HomeSection(title = "Trending", albums = trendingAlbums)
+            val staffPicksSection = HomeSection(title = "Staff picks", albums = staffPicksAlbums)
+            val saleSection = HomeSection(title = "Sale", albums = saleAlbums)
+
             _state.update {
-                it.copy(homeSections = listOf(newArrivalsSection))
+                it.copy(homeSections = listOf(newArrivalsSection, trendingSection, staffPicksSection, saleSection))
             }
         }
     }

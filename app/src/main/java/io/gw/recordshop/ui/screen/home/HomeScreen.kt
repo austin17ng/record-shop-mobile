@@ -56,9 +56,6 @@ fun HomeScreen(
 
     LoadingHandler(isLoading)
 
-    LaunchedEffect(Unit) {
-        viewModel.getAlbums()
-    }
     HomeScreen(state) { event ->
         when (event) {
             is HomeEvent.OnAlbumClicked -> {

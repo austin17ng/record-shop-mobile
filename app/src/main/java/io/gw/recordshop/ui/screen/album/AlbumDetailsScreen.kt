@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,9 +48,8 @@ fun AlbumDetailsScreen(
 
     LoadingHandler(isLoading)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(albumId) {
         viewModel.getAlbum(albumId)
-
     }
 
     AlbumDetailsScreen(
@@ -69,7 +70,7 @@ fun AlbumDetailsScreen(
             .background(color = LocalColor.current.colorSoftScream)
     ) {
         Column(Modifier.weight(1f)) {
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(32.dp))
             AsyncImage(
                 model = state.album.coverUrl,
                 contentDescription = null,
@@ -100,24 +101,62 @@ fun AlbumDetailsScreen(
             )
             Spacer(Modifier.height(24.dp))
             Text(
-                text = "Description",
+                text = "Details",
                 style = LocalTypography.current.headlineSmall,
                 color = LocalColor.current.colorBlack,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(8.dp))
-            Text(
-                text = state.album.description ?: "",
-                style = LocalTypography.current.bodyMedium,
-                color = LocalColor.current.colorBlack,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            Row {
+                Text(
+                    text = "Label:",
+                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = LocalColor.current.colorBlack,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                Spacer(Modifier.width(2.dp))
+                Text(
+                    text = state.album.label ?: "",
+                    style = LocalTypography.current.bodyMedium,
+                    color = LocalColor.current.colorBlack,
+                )
+            }
+            Spacer(Modifier.height(2.dp))
+            Row {
+                Text(
+                    text = "Genre:",
+                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = LocalColor.current.colorBlack,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                Spacer(Modifier.width(2.dp))
+                Text(
+                    text = state.album.genre ?: "",
+                    style = LocalTypography.current.bodyMedium,
+                    color = LocalColor.current.colorBlack,
+                )
+            }
+            Spacer(Modifier.height(2.dp))
+            Row {
+                Text(
+                    text = "Release Date:",
+                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = LocalColor.current.colorBlack,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                Spacer(Modifier.width(2.dp))
+                Text(
+                    text = state.album.releaseDate ?: "",
+                    style = LocalTypography.current.bodyMedium,
+                    color = LocalColor.current.colorBlack,
+                )
+            }
             Spacer(Modifier.height(24.dp))
             Text(
                 text = "Tracklist",
                 style = LocalTypography.current.headlineSmall,
                 color = LocalColor.current.colorBlack,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(start = 16.dp)
             )
             Spacer(Modifier.height(8.dp))
             state.album.tracks.forEachIndexed { index, track ->
@@ -168,7 +207,8 @@ fun AlbumDetailsScreenPreview() {
                 Track(trackNumber = 4, title = "Money", duration = 1321)
             ),
             stockQuantity = 12,
-            price = 11.99
+            price = 11.99,
+            label = "Harvest"
         )
     )
     AlbumDetailsScreen(state) { }

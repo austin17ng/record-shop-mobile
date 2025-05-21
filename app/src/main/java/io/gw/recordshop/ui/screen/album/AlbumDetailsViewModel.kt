@@ -6,6 +6,7 @@ import io.gw.recordshop.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 data class AlbumDetailsState(
     val album: Album = Album(),
@@ -21,8 +22,11 @@ class AlbumDetailsViewModel(
     val state: StateFlow<AlbumDetailsState> = _state.asStateFlow()
 
     fun getAlbum(albumId: Long) {
-        launchNetwork {
-
+        launchSilent {
+            val album = recordShopApiService.getAlbum(albumId)
+            _state.update {
+                it.copy(album = album)
+            }
         }
     }
 }

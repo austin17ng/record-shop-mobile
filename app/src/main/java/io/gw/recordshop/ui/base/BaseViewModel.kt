@@ -2,6 +2,7 @@ package io.gw.recordshop.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,7 @@ abstract class BaseViewModel: ViewModel() {
     protected val _networkError = MutableStateFlow<String?>(null)
     val networkError = _networkError.asSharedFlow()
 
-    fun launchNetwork(block: suspend () -> Unit) {
+    fun launchNetwork(block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _isLoading.update { true }
@@ -27,6 +28,16 @@ abstract class BaseViewModel: ViewModel() {
 
             } finally {
                 _isLoading.update { false }
+            }
+        }
+    }
+
+    fun launchSilent(block: suspend CoroutineScope.() -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                block()
+            } catch (e: Exception) {
+
             }
         }
     }
