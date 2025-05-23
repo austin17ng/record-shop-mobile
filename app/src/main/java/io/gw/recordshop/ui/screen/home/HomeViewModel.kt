@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 data class HomeState(
     val homeSections: List<HomeSection> = emptyList()
@@ -36,7 +37,7 @@ class HomeViewModel(
     }
 
     fun getAlbums() {
-        launchNetwork {
+        launchSilent {
             val newArrivalAlbumsDeferred = async { recordShopApiService.getNewArrivalAlbums() }
             val trendingAlbumsDeferred = async { recordShopApiService.getTrendingAlbums() }
             val staffPicksAlbumsDeferred = async { recordShopApiService.getStaffPicksAlbums() }

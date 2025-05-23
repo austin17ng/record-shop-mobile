@@ -1,7 +1,10 @@
 package io.gw.recordshop.ui.screen.cart
 
 import io.gw.recordshop.data.CartItem
+import io.gw.recordshop.remote.RecordShopApiService
 import io.gw.recordshop.ui.base.BaseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class CartState(
     val cartItems: List<CartItem> = emptyList(),
@@ -17,5 +20,9 @@ sealed class CartEvent {
 
 
 
-class CartViewModel: BaseViewModel() {
+class CartViewModel(
+    private val recordShopApiService: RecordShopApiService
+): BaseViewModel() {
+    private val _state = MutableStateFlow<CartState>(CartState())
+    val state = _state.asStateFlow()
 }
