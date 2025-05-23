@@ -1,6 +1,7 @@
 package io.gw.recordshop.data
 
 data class CartItem(
-    val album: Album,
-    val quantity: Int,
+    val id: Long? = null,
+    val album: Album? = null,
+    val quantity: Int? = null,
 )

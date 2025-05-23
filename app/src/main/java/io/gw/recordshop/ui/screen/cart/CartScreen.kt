@@ -1,5 +1,6 @@
 package io.gw.recordshop.ui.screen.cart
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +18,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +37,7 @@ import io.gw.recordshop.R
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.CartItem
+import io.gw.recordshop.ui.common.LoadingHandler
 import io.gw.recordshop.ui.component.UiAppBar
 import io.gw.recordshop.ui.component.UiBottomNavigation
 import io.gw.recordshop.ui.component.UiBottomNavigationItem
@@ -46,7 +50,18 @@ import org.koin.androidx.compose.koinViewModel
 fun CartScreen(
     viewModel: CartViewModel = koinViewModel<CartViewModel>(),
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.networkError.collect {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    LoadingHandler(isLoading)
+
     CartScreen(state = state) {
 
     }
@@ -74,7 +89,7 @@ fun CartScreen(
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 AsyncImage(
-                    model = cartItem.album.coverUrl,
+                    model = cartItem.album?.coverUrl,
                     contentDescription = null,
                     error = painterResource(id = R.drawable.never_mind_cover),
                     placeholder = painterResource(id = R.drawable.never_mind_cover),
@@ -86,13 +101,13 @@ fun CartScreen(
                 Spacer(Modifier.width(16.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        text = cartItem.album.title ?: "",
+                        text = cartItem.album?.title ?: "",
                         maxLines = 2,
                         style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = MoneyUtils.formatMoney(cartItem.album.price ?: 0.0),
+                        text = MoneyUtils.formatMoney(cartItem.album?.price ?: 0.0),
                         style = LocalTypography.current.bodyMedium
                     )
                 }

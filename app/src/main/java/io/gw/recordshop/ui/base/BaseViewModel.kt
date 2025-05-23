@@ -30,7 +30,9 @@ abstract class BaseViewModel: ViewModel() {
                 }
             }
             else -> {
-
+                viewModelScope.launch {
+                    _networkError.emit(throwable.message ?: "Something went wrong")
+                }
             }
         }
     }

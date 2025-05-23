@@ -2,6 +2,8 @@ package io.gw.recordshop.remote
 
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
+import io.gw.recordshop.data.CartItem
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -23,4 +25,7 @@ interface RecordShopApiService {
 
     @GET("api/albums/{albumId}")
     suspend fun getAlbum(@Path("albumId") albumId: Long): Album
+
+    @GET("api/carts")
+    suspend fun getCart(): Response<List<CartItem>>
 }
