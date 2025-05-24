@@ -2,6 +2,7 @@ package io.gw.recordshop.ui.screen.cart
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,6 +52,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CartScreen(
     viewModel: CartViewModel = koinViewModel<CartViewModel>(),
+    onLoginRequest: () -> Unit,
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
@@ -64,15 +66,14 @@ fun CartScreen(
 
     LoadingHandler(isLoading)
 
-    CartScreen(state = state) {
-
-    }
+    CartScreen(state = state, onEvent = {}, onLoginRequest = onLoginRequest)
 }
 
 @Composable
 fun CartScreen(
     state: CartState,
     onEvent: (CartEvent) -> Unit,
+    onLoginRequest: () -> Unit,
 ) {
     Column(
         Modifier
@@ -88,11 +89,17 @@ fun CartScreen(
             CartState.Init -> {
 
             }
+
             CartState.Loading -> {
-                Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f), contentAlignment = Alignment.Center
+                ) {
                     UiCircularProgressIndicator()
                 }
             }
+
             is CartState.LoggedIn -> {
                 state.cartItems.forEach { cartItem ->
                     CartRow(cartItem = cartItem) {}
@@ -119,12 +126,21 @@ fun CartScreen(
                     onClick = {})
 
             }
+
             CartState.LoggedOut -> {
-                Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
                         text = "Please log in to view your cart",
                         style = LocalTypography.current.headlineSmall,
                     )
+                    Spacer(Modifier.height(8.dp))
+                    UiButton(text = "Log in", onClick = onLoginRequest)
                 }
             }
         }
@@ -243,6 +259,6 @@ fun CartScreenPreview() {
     Scaffold(bottomBar = {
         UiBottomNavigation(selectedItem = UiBottomNavigationItem.CART)
     }) { padding ->
-        CartScreen(state = state) { }
+        CartScreen(state = state, onEvent = {}, onLoginRequest = {})
     }
 }

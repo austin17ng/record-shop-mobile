@@ -69,122 +69,109 @@ fun AlbumDetailsScreen(
             .fillMaxSize()
             .background(color = LocalColor.current.colorSoftScream)
     ) {
-        Column(Modifier.weight(1f)) {
-            Spacer(Modifier.height(32.dp))
-            AsyncImage(
-                model = state.album.coverUrl,
-                contentDescription = null,
-                error = painterResource(id = R.drawable.never_mind_cover),
-                placeholder = painterResource(id = R.drawable.never_mind_cover),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(horizontal = 96.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(16.dp))
-            )
-            Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(32.dp))
+        AsyncImage(
+            model = state.album.coverUrl,
+            contentDescription = null,
+            error = painterResource(id = R.drawable.never_mind_cover),
+            placeholder = painterResource(id = R.drawable.never_mind_cover),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(horizontal = 96.dp)
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(16.dp))
+        )
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = state.album.title ?: "",
+            style = LocalTypography.current.displaySmall,
+            color = LocalColor.current.colorBlack,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = state.album.artist?.name ?: "",
+            style = LocalTypography.current.labelLarge,
+            color = LocalColor.current.colorBlack,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = "Details",
+            style = LocalTypography.current.headlineSmall,
+            color = LocalColor.current.colorBlack,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        Row {
             Text(
-                text = state.album.title ?: "",
-                style = LocalTypography.current.displaySmall,
-                color = LocalColor.current.colorBlack,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = state.album.artist?.name ?: "",
-                style = LocalTypography.current.labelLarge,
-                color = LocalColor.current.colorBlack,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(24.dp))
-            Text(
-                text = "Details",
-                style = LocalTypography.current.headlineSmall,
-                color = LocalColor.current.colorBlack,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(Modifier.height(8.dp))
-            Row {
-                Text(
-                    text = "Label:",
-                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = LocalColor.current.colorBlack,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                Spacer(Modifier.width(2.dp))
-                Text(
-                    text = state.album.label ?: "",
-                    style = LocalTypography.current.bodyMedium,
-                    color = LocalColor.current.colorBlack,
-                )
-            }
-            Spacer(Modifier.height(2.dp))
-            Row {
-                Text(
-                    text = "Genre:",
-                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = LocalColor.current.colorBlack,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                Spacer(Modifier.width(2.dp))
-                Text(
-                    text = state.album.genre ?: "",
-                    style = LocalTypography.current.bodyMedium,
-                    color = LocalColor.current.colorBlack,
-                )
-            }
-            Spacer(Modifier.height(2.dp))
-            Row {
-                Text(
-                    text = "Release Date:",
-                    style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = LocalColor.current.colorBlack,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                Spacer(Modifier.width(2.dp))
-                Text(
-                    text = state.album.releaseDate ?: "",
-                    style = LocalTypography.current.bodyMedium,
-                    color = LocalColor.current.colorBlack,
-                )
-            }
-            Spacer(Modifier.height(24.dp))
-            Text(
-                text = "Tracklist",
-                style = LocalTypography.current.headlineSmall,
+                text = "Label:",
+                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                 color = LocalColor.current.colorBlack,
                 modifier = Modifier.padding(start = 16.dp)
             )
-            Spacer(Modifier.height(8.dp))
-            state.album.tracks.forEachIndexed { index, track ->
-                Text(
-                    text = "${index + 1}. ${track.title}",
-                    style = LocalTypography.current.bodyMedium,
-                    color = LocalColor.current.colorBlack,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
+            Spacer(Modifier.width(2.dp))
+            Text(
+                text = state.album.label ?: "",
+                style = LocalTypography.current.bodyMedium,
+                color = LocalColor.current.colorBlack,
+            )
         }
-        Column(Modifier.fillMaxWidth()) {
-            HorizontalDivider(color = LocalColor.current.colorLightGray)
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = MoneyUtils.formatMoney(state.album.price ?: 0.0),
-                    style = LocalTypography.current.headlineLarge
-                )
-                Spacer(Modifier.weight(1f))
-                UiButton(text = "Add to cart", onClick = {})
-            }
+        Spacer(Modifier.height(2.dp))
+        Row {
+            Text(
+                text = "Genre:",
+                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = LocalColor.current.colorBlack,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            Spacer(Modifier.width(2.dp))
+            Text(
+                text = state.album.genre ?: "",
+                style = LocalTypography.current.bodyMedium,
+                color = LocalColor.current.colorBlack,
+            )
         }
+        Spacer(Modifier.height(2.dp))
+        Row {
+            Text(
+                text = "Release Date:",
+                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = LocalColor.current.colorBlack,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            Spacer(Modifier.width(2.dp))
+            Text(
+                text = state.album.releaseDate ?: "",
+                style = LocalTypography.current.bodyMedium,
+                color = LocalColor.current.colorBlack,
+            )
+        }
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = "Tracklist",
+            style = LocalTypography.current.headlineSmall,
+            color = LocalColor.current.colorBlack,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        state.album.tracks.forEachIndexed { index, track ->
+            Text(
+                text = "${index + 1}. ${track.title}",
+                style = LocalTypography.current.bodyMedium,
+                color = LocalColor.current.colorBlack,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
+        Spacer(Modifier.height(24.dp))
+        UiButton(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "Add to cart",
+            onClick = {}
+        )
     }
 }
 

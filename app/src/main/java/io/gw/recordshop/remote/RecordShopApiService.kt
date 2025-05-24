@@ -3,8 +3,12 @@ package io.gw.recordshop.remote
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.CartItem
+import io.gw.recordshop.data.LoginRequest
+import io.gw.recordshop.data.LoginResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RecordShopApiService {
@@ -28,4 +32,7 @@ interface RecordShopApiService {
 
     @GET("api/carts")
     suspend fun getCart(): Response<List<CartItem>>
+
+    @POST("api/auth/login")
+    suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 }

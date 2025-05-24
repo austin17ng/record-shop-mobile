@@ -1,17 +1,14 @@
 package io.gw.recordshop
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.gw.recordshop.ui.component.UiBottomNavigation
@@ -32,6 +28,8 @@ import io.gw.recordshop.ui.screen.cart.CartScreen
 import io.gw.recordshop.ui.screen.favourite.FavouriteDestination
 import io.gw.recordshop.ui.screen.home.HomeDestination
 import io.gw.recordshop.ui.screen.home.HomeScreen
+import io.gw.recordshop.ui.screen.login.LoginDestination
+import io.gw.recordshop.ui.screen.login.LoginScreen
 import io.gw.recordshop.ui.theme.AppTheme
 
 
@@ -41,24 +39,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                var selectedItem by remember { mutableStateOf(UiBottomNavigationItem.HOME) }
+                var selectedBottomNavItem by remember { mutableStateOf(UiBottomNavigationItem.HOME) }
                 val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-                LaunchedEffect(navBackStackEntry?.destination) {
-                    Log.d("MainActivity", "onCreate: ${navBackStackEntry?.destination}")
-                    Log.d("MainActivity", "onCreate: ${navBackStackEntry?.destination?.route}")
-                    Log.d("MainActivity", "onCreate: ${navBackStackEntry?.destination?.id}")
-                }
 
                 Scaffold(
                     modifier = Modifier
                         .navigationBarsPadding(),
                     bottomBar = {
                         UiBottomNavigation(
-                            selectedItem = selectedItem,
+                            selectedItem = selectedBottomNavItem,
                             onClick = {
-                                selectedItem = it
+                                selectedBottomNavItem = it
                                 when (it) {
                                     UiBottomNavigationItem.HOME -> {
                                         navController.navigate(HomeDestination) {
@@ -134,7 +125,18 @@ fun AppGraph(navController: NavHostController) {
             AlbumDetailsScreen(albumId = albumId)
         }
         composable<CartDestination> {
-            CartScreen()
+            CartScreen(
+                onLoginRequest = {
+                    navController.navigate(LoginDestination)
+                }
+            )
+        }
+        composable<LoginDestination> {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
