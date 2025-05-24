@@ -44,6 +44,7 @@ import io.gw.recordshop.R
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.ui.common.LoadingHandler
+import io.gw.recordshop.ui.component.UiAppBar
 import io.gw.recordshop.ui.component.UiBottomNavigation
 import io.gw.recordshop.ui.component.UiBottomNavigationItem
 import io.gw.recordshop.ui.noRippleClickable
@@ -87,29 +88,11 @@ fun HomeScreen(
             .fillMaxSize()
             .background(color = LocalColor.current.colorSoftScream)
     ) {
-        item(key = "title") {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
-                    .background(color = LocalColor.current.colorOrange)
-                    .padding(16.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "Record shop",
-                        style = LocalTypography.current.displayLarge,
-                        color = LocalColor.current.colorOffWhite
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Icon(
-                        painter = painterResource(R.drawable.ic_menu),
-                        tint = LocalColor.current.colorOffWhite,
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            }
+        item(key = "app bar") {
+            UiAppBar(
+                title = "Record shop"
+            )
+            Spacer(Modifier.height(24.dp))
         }
         items(state.homeSections) {
             Column(

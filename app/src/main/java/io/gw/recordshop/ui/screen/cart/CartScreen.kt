@@ -2,6 +2,7 @@ package io.gw.recordshop.ui.screen.cart
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +43,7 @@ import io.gw.recordshop.ui.component.UiAppBar
 import io.gw.recordshop.ui.component.UiBottomNavigation
 import io.gw.recordshop.ui.component.UiBottomNavigationItem
 import io.gw.recordshop.ui.component.UiButton
+import io.gw.recordshop.ui.component.UiCircularProgressIndicator
 import io.gw.recordshop.ui.theme.LocalColor
 import io.gw.recordshop.ui.theme.LocalTypography
 import org.koin.androidx.compose.koinViewModel
@@ -82,134 +84,162 @@ fun CartScreen(
             title = "Cart"
         )
         Spacer(Modifier.height(24.dp))
-        state.cartItems.forEach { cartItem ->
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
-                AsyncImage(
-                    model = cartItem.album?.coverUrl,
-                    contentDescription = null,
-                    error = painterResource(id = R.drawable.never_mind_cover),
-                    placeholder = painterResource(id = R.drawable.never_mind_cover),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
-                Spacer(Modifier.width(16.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = cartItem.album?.title ?: "",
-                        maxLines = 2,
-                        style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = MoneyUtils.formatMoney(cartItem.album?.price ?: 0.0),
-                        style = LocalTypography.current.bodyMedium
-                    )
-                }
-                Spacer(Modifier.width(16.dp))
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .background(
-                            color = LocalColor.current.colorLightGray,
-                            shape = RoundedCornerShape(8.dp)
-                        ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "-",
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        textAlign = TextAlign.Center,
-                        style = LocalTypography.current.bodyMedium,
-                    )
-                    Text(
-                        text = "${cartItem.quantity}",
-                        style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    )
-                    Text(
-                        text = "+",
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        textAlign = TextAlign.Center,
-                        style = LocalTypography.current.bodyMedium,
-                    )
-                }
+        when (state) {
+            CartState.Init -> {
 
             }
+            CartState.Loading -> {
+                Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+                    UiCircularProgressIndicator()
+                }
+            }
+            is CartState.LoggedIn -> {
+                state.cartItems.forEach { cartItem ->
+                    CartRow(cartItem = cartItem) {}
+                }
+                Spacer(Modifier.height(24.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = LocalColor.current.colorLightGray
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Total: " + MoneyUtils.formatMoney(state.getTotalPrice()),
+                    style = LocalTypography.current.headlineSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                Spacer(Modifier.height(8.dp))
+                UiButton(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    text = "Check out",
+                    onClick = {})
+
+            }
+            CartState.LoggedOut -> {
+                Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "Please log in to view your cart",
+                        style = LocalTypography.current.headlineSmall,
+                    )
+                }
+            }
         }
-        Spacer(Modifier.height(24.dp))
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            color = LocalColor.current.colorLightGray
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = "Total: " + MoneyUtils.formatMoney(state.getTotalPrice()),
-            style = LocalTypography.current.headlineSmall,
+    }
+}
+
+@Composable
+fun CartRow(
+    cartItem: CartItem,
+    onClick: (CartItem) -> Unit
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+    ) {
+        AsyncImage(
+            model = cartItem.album?.coverUrl,
+            contentDescription = null,
+            error = painterResource(id = R.drawable.never_mind_cover),
+            placeholder = painterResource(id = R.drawable.never_mind_cover),
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .size(64.dp)
+                .clip(RoundedCornerShape(8.dp))
         )
-        Spacer(Modifier.height(8.dp))
-        UiButton(
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                text = cartItem.album?.title ?: "",
+                maxLines = 2,
+                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = MoneyUtils.formatMoney(cartItem.album?.price ?: 0.0),
+                style = LocalTypography.current.bodyMedium
+            )
+        }
+        Spacer(Modifier.width(16.dp))
+        Row(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-            text = "Check out",
-            onClick = {})
+                .align(Alignment.CenterVertically)
+                .background(
+                    color = LocalColor.current.colorLightGray,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "-",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                textAlign = TextAlign.Center,
+                style = LocalTypography.current.bodyMedium,
+            )
+            Text(
+                text = "${cartItem.quantity}",
+                style = LocalTypography.current.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+            )
+            Text(
+                text = "+",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                textAlign = TextAlign.Center,
+                style = LocalTypography.current.bodyMedium,
+            )
+        }
+
     }
 }
 
 @Preview
 @Composable
 fun CartScreenPreview() {
-    val state = CartState(
-        cartItems = listOf(
-            CartItem(
-                album = Album(
-                    id = 1L,
-                    title = "Abbey Road",
-                    description = "A classic album by The Beatles, featuring iconic tracks like 'Come Together' and 'Here Comes the Sun'.",
-                    artist = Artist(name = "The Beatles"),
-                    genre = "Rock",
-                    stockQuantity = 5,
-                    price = 12.99
-                ),
-                quantity = 1,
+    val cartItems = listOf(
+        CartItem(
+            album = Album(
+                id = 1L,
+                title = "Abbey Road",
+                description = "A classic album by The Beatles, featuring iconic tracks like 'Come Together' and 'Here Comes the Sun'.",
+                artist = Artist(name = "The Beatles"),
+                genre = "Rock",
+                stockQuantity = 5,
+                price = 12.99
             ),
-            CartItem(
-                album = Album(
-                    id = 2L,
-                    title = "Random Access Memories",
-                    description = "An electronic masterpiece by Daft Punk with a blend of disco and funk.",
-                    artist = Artist(name = "Daft Punk"),
-                    coverUrl = "https://example.com/covers/random_access_memories.jpg",
-                    releaseDate = "2013-05-17",
-                    genre = "Funk",
-                    stockQuantity = 10,
-                    price = 14.49
-                ),
-                quantity = 2,
+            quantity = 1,
+        ),
+        CartItem(
+            album = Album(
+                id = 2L,
+                title = "Random Access Memories",
+                description = "An electronic masterpiece by Daft Punk with a blend of disco and funk.",
+                artist = Artist(name = "Daft Punk"),
+                coverUrl = "https://example.com/covers/random_access_memories.jpg",
+                releaseDate = "2013-05-17",
+                genre = "Funk",
+                stockQuantity = 10,
+                price = 14.49
             ),
-            CartItem(
-                album = Album(
-                    id = 3L,
-                    title = "21",
-                    description = "A soulful album from Adele that features emotional ballads and chart-topping hits.",
-                    artist = Artist(name = "Adele"),
-                    coverUrl = "https://example.com/covers/21.jpg",
-                    releaseDate = "2011-01-24",
-                    genre = "Pop",
-                    price = 10.99
-                ),
-                quantity = 1,
-            )
+            quantity = 2,
+        ),
+        CartItem(
+            album = Album(
+                id = 3L,
+                title = "21",
+                description = "A soulful album from Adele that features emotional ballads and chart-topping hits.",
+                artist = Artist(name = "Adele"),
+                coverUrl = "https://example.com/covers/21.jpg",
+                releaseDate = "2011-01-24",
+                genre = "Pop",
+                price = 10.99
+            ),
+            quantity = 1,
         )
     )
+    val state = CartState.LoggedIn(cartItems)
     Scaffold(bottomBar = {
         UiBottomNavigation(selectedItem = UiBottomNavigationItem.CART)
     }) { padding ->
