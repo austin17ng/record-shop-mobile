@@ -1,5 +1,6 @@
 package io.gw.recordshop
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +34,8 @@ import io.gw.recordshop.ui.screen.home.HomeScreen
 import io.gw.recordshop.ui.screen.login.LoginDestination
 import io.gw.recordshop.ui.screen.login.LoginScreen
 import io.gw.recordshop.ui.theme.AppTheme
+import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 
 class MainActivity : ComponentActivity() {
@@ -89,6 +94,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppGraph(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     NavHost(
         enterTransition = {
             slideIntoContainer(
@@ -133,8 +140,15 @@ fun AppGraph(navController: NavHostController) {
         }
         composable<LoginDestination> {
             LoginScreen(
-                onLoginSuccess = {
+                onLoginSuccess = { token ->
                     navController.popBackStack()
+                    scope.launch {
+                        val sharedPref = context.getSharedPreferences(Tags.SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                        sharedPref.edit() {
+                            putString(Tags.SHARED_PREF_TOKEN_KEY, token)
+                        }
+                    }
+
                 }
             )
         }
