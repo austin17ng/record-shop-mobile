@@ -42,7 +42,7 @@ class CartViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _state.update { CartState.Loading }
-                delay(2000L)
+                delay(1000L)
                 val response = recordShopApiService.getCart()
                 if (response.isSuccessful) {
                     _state.value = CartState.LoggedIn(response.body() ?: emptyList())

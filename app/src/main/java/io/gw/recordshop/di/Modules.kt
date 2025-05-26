@@ -3,7 +3,6 @@ package io.gw.recordshop.di
 import android.content.Context
 import io.gw.recordshop.BuildConfig
 import io.gw.recordshop.Tags
-import io.gw.recordshop.remote.AppApiService
 import io.gw.recordshop.remote.RecordShopApiService
 import io.gw.recordshop.ui.screen.album.AlbumDetailsViewModel
 import io.gw.recordshop.ui.screen.cart.CartViewModel
@@ -32,9 +31,13 @@ val appModule = module {
                 val request = chain.request()
                 val url = request.url.toString()
 
-                val isAuthRequest = url.contains("/login") || url.contains("/register")
+                val isHeaderNeeded = !(
+                        url.contains("/login")
+                        || url.contains("/register")
+                        || url.contains("/api/albums/")
+                )
 
-                val newRequest = if (!isAuthRequest) {
+                val newRequest = if (isHeaderNeeded) {
                     val token = sharedPref.getString(Tags.SHARED_PREF_TOKEN_KEY, "") ?: ""
                     request.newBuilder()
                         .addHeader("Authorization", "Bearer $token")

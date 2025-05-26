@@ -1,5 +1,6 @@
 package io.gw.recordshop.ui.screen.album
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,6 +47,7 @@ fun AlbumDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val context = LocalContext.current
 
     LoadingHandler(isLoading)
 
@@ -52,9 +55,18 @@ fun AlbumDetailsScreen(
         viewModel.getAlbum(albumId)
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.addedCartItem.collect {
+            Toast.makeText(context, "Album added to cart", Toast.LENGTH_LONG).show()
+        }
+    }
+
     AlbumDetailsScreen(
         state = state,
-        onEvent = {}
+        onEvent = {},
+        onAddToCartClicked = {
+            viewModel.addToCart()
+        }
     )
 
 }
@@ -63,6 +75,7 @@ fun AlbumDetailsScreen(
 fun AlbumDetailsScreen(
     state: AlbumDetailsState,
     onEvent: (AlbumDetailsEvent) -> Unit,
+    onAddToCartClicked: () -> Unit,
 ) {
     Column(
         Modifier
@@ -170,7 +183,9 @@ fun AlbumDetailsScreen(
         UiButton(
             modifier = Modifier.padding(start = 16.dp),
             text = "Add to cart",
-            onClick = {}
+            onClick = {
+                onAddToCartClicked()
+            }
         )
     }
 }
@@ -198,5 +213,9 @@ fun AlbumDetailsScreenPreview() {
             label = "Harvest"
         )
     )
-    AlbumDetailsScreen(state) { }
+    AlbumDetailsScreen(
+        state = state,
+        onAddToCartClicked = {},
+        onEvent = {}
+    )
 }

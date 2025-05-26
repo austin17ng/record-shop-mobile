@@ -1,5 +1,6 @@
 package io.gw.recordshop.remote
 
+import io.gw.recordshop.data.AddToCartRequest
 import io.gw.recordshop.data.Album
 import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.CartItem
@@ -8,6 +9,7 @@ import io.gw.recordshop.data.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -29,6 +31,9 @@ interface RecordShopApiService {
 
     @GET("api/albums/{albumId}")
     suspend fun getAlbum(@Path("albumId") albumId: Long): Album
+
+    @POST("api/carts/add-single-item")
+    suspend fun addToCart(@Body request: AddToCartRequest): Response<CartItem>
 
     @GET("api/carts")
     suspend fun getCart(): Response<List<CartItem>>
