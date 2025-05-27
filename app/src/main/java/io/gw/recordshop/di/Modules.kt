@@ -8,6 +8,7 @@ import io.gw.recordshop.ui.screen.album.AlbumDetailsViewModel
 import io.gw.recordshop.ui.screen.cart.CartViewModel
 import io.gw.recordshop.ui.screen.home.HomeViewModel
 import io.gw.recordshop.ui.screen.login.LoginViewModel
+import io.gw.recordshop.ui.screen.orders.OrdersViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -68,4 +69,5 @@ val viewModelModule = module {
     viewModel { AlbumDetailsViewModel(get()) }
     viewModel { CartViewModel(get()) }
     viewModel { LoginViewModel(get()) }
+    viewModel { OrdersViewModel(get()) }
 }

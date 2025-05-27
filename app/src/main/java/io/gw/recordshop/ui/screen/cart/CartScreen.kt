@@ -62,11 +62,16 @@ fun CartScreen(
         viewModel.networkError.collect {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
+        viewModel.order.collect {
+            Toast.makeText(context, "Order placed successfully", Toast.LENGTH_LONG).show()
+        }
     }
 
     LoadingHandler(isLoading)
 
-    CartScreen(state = state, onEvent = {}, onLoginRequest = onLoginRequest)
+    CartScreen(state = state, onEvent = {
+        viewModel.onEvent(it)
+    }, onLoginRequest = onLoginRequest)
 }
 
 @Composable
@@ -101,30 +106,47 @@ fun CartScreen(
             }
 
             is CartState.LoggedIn -> {
-                state.cartItems.forEach { cartItem ->
-                    CartRow(cartItem = cartItem) {}
-                }
-                Spacer(Modifier.height(24.dp))
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = LocalColor.current.colorLightGray
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = "Total: " + MoneyUtils.formatMoney(state.getTotalPrice()),
-                    style = LocalTypography.current.headlineSmall,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-                Spacer(Modifier.height(8.dp))
-                UiButton(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    text = "Check out",
-                    onClick = {})
+                if (state.cartItems.isEmpty()) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Your cart is empty",
+                            style = LocalTypography.current.headlineSmall,
+                        )
+                    }
 
+                } else {
+                    state.cartItems.forEach { cartItem ->
+                        CartRow(cartItem = cartItem) {}
+                    }
+                    Spacer(Modifier.height(24.dp))
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = LocalColor.current.colorLightGray
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = "Total: " + MoneyUtils.formatMoney(state.getTotalPrice()),
+                        style = LocalTypography.current.headlineSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    UiButton(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        text = "Check out",
+                        onClick = {
+                            onEvent(CartEvent.PayForCart)
+                        })
+                }
             }
 
             CartState.LoggedOut -> {

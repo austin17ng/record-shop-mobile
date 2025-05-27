@@ -6,6 +6,7 @@ import io.gw.recordshop.data.Artist
 import io.gw.recordshop.data.CartItem
 import io.gw.recordshop.data.LoginRequest
 import io.gw.recordshop.data.LoginResponse
+import io.gw.recordshop.data.Order
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -40,4 +41,10 @@ interface RecordShopApiService {
 
     @POST("api/auth/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
+
+    @POST("api/orders/pay-for-cart")
+    suspend fun payForCart(): Response<Order>
+
+    @GET("api/orders/get-all")
+    suspend fun getAllOrders(): Response<List<Order>>
 }

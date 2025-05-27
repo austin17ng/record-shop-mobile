@@ -36,6 +36,10 @@ import io.gw.recordshop.ui.screen.login.LoginScreen
 import io.gw.recordshop.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 import androidx.core.content.edit
+import io.gw.recordshop.ui.screen.orders.OrdersDestination
+import io.gw.recordshop.ui.screen.orders.OrdersScreen
+import io.gw.recordshop.ui.screen.profile.ProfileDestination
+import io.gw.recordshop.ui.screen.profile.ProfileScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -64,11 +68,11 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                     UiBottomNavigationItem.FAV -> {
-                                        navController.navigate(FavouriteDestination) {
-                                            popUpTo(FavouriteDestination) {
-                                                inclusive = true
-                                            }
-                                        }
+//                                        navController.navigate(FavouriteDestination) {
+//                                            popUpTo(FavouriteDestination) {
+//                                                inclusive = true
+//                                            }
+//                                        }
                                     }
                                     UiBottomNavigationItem.CART -> {
                                         navController.navigate(CartDestination) {
@@ -78,7 +82,11 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                     UiBottomNavigationItem.PROFILE -> {
-
+                                        navController.navigate(ProfileDestination) {
+                                            popUpTo(ProfileDestination) {
+                                                inclusive = true
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -138,6 +146,16 @@ fun AppGraph(navController: NavHostController) {
                 }
             )
         }
+        composable<ProfileDestination> {
+            ProfileScreen(
+                onOrdersClicked = {
+                    navController.navigate(OrdersDestination)
+                }
+            )
+        }
+        composable<OrdersDestination> {
+            OrdersScreen()
+        }
         composable<LoginDestination> {
             LoginScreen(
                 onLoginSuccess = { token ->
@@ -148,7 +166,6 @@ fun AppGraph(navController: NavHostController) {
                             putString(Tags.SHARED_PREF_TOKEN_KEY, token)
                         }
                     }
-
                 }
             )
         }
